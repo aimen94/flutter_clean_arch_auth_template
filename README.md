@@ -8,6 +8,9 @@ A modern Flutter application demonstrating Clean Architecture principles with co
 |--------------|-------------|----------------|
 | ![Login](assets/screenshots/login.jpeg) | ![Home](assets/screenshots/homePage.jpeg) | ![Fetch User Data](assets/screenshots/FetchUserData.jpeg) |
 
+## 🎥 Demo Video
+![Demo](assets/screenshots/demo.gif)
+
 
 ## Api Reference
 
@@ -65,6 +68,10 @@ This project follows **Clean Architecture** principles, implementing a layered a
 - **Request/Response Logging**: Comprehensive logging for debugging
 - **Token Interceptors**: Automatic token injection and refresh
 - **Error Handling**: Graceful error handling with user feedback
+### Network Layer ScreenShot
+| InterCeptors1 | InterCeptors2  |InterCeptors3 |
+|--------------|-------------|----------------|
+| ![screen1](assets/screenshots/InterCeptors1.jpg) | ![scree2](assets/screenshots/InterCeptors2.jpg) | ![screen3](assets/screenshots/InterCeptors3.jpg) |
 
 ### 💾 Data Management
 - **Local Storage**: SharedPreferences for non-sensitive data
