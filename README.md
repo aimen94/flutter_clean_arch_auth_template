@@ -2,6 +2,13 @@
 
 A modern Flutter application demonstrating Clean Architecture principles with comprehensive authentication features, secure token management, and professional state management.
 
+## 📸 Screenshots
+
+| Login Screen | Home Screen | Profile Screen |
+|--------------|-------------|----------------|
+| ![Login](assets/screenshots/login.jpeg) | ![Home](assets/screenshots/homePage.jpeg) | ![Fetch User Data](assets/screenshots/FetchUserData.jpeg) |
+
+
 ## Api Reference
 
 This Flutter project demonstrates authentication using the [DummyJSON API](https://dummyjson.com/).
