@@ -187,11 +187,7 @@ The project includes comprehensive testing strategies:
 - **Efficient State Management**: Minimal rebuilds with Cubit
 - **Memory Management**: Proper disposal of resources
 - **Network Optimization**: Request caching and deduplication
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
+ 
 ### Development Workflow
 
 1. Fork the repository
