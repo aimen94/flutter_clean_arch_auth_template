@@ -10,6 +10,7 @@ A modern Flutter application demonstrating Clean Architecture principles with co
 
 ## 🎥 Demo Video
 ![Demo](assets/screenshots/demo.gif)
+https://youtube.com/shorts/3Evo_yCz4EA?feature=share
 
 
 ## Api Reference
