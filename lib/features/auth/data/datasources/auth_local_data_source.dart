@@ -113,7 +113,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> cacheUser(UserModel user) async {
     final userMap = user.toJson();
     final userJsonString = json.encode(userMap);
-    await _localStorage.setString('user', userJsonString);
+    await _localStorage.setString(StorageKeys.userData, userJsonString);
   }
 
   @override
@@ -124,9 +124,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   /// This should be corrected to read StorageKeys.accessToken
   Future<String?> getAccessToken() async {
     try {
-      return await _secureStorageManager.red(
-        StorageKeys.refreshToken, // BUG: Should be StorageKeys.accessToken
-      );
+      return await _secureStorageManager.red(StorageKeys.accessToken);
     } catch (e) {
       throw CacheException('Failed to read refresh token ');
     }

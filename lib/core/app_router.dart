@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/constants/storage_keys.dart';
+import 'package:flutter_application_2/features/auth/domin/entity/user_entity.dart';
 import 'package:flutter_application_2/features/auth/home_page.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
 import 'package:flutter_application_2/features/auth/presentions/pages/login_screen.dart';
+import 'package:flutter_application_2/features/auth/presentions/pages/profile_screen.dart';
 import 'package:flutter_application_2/features/auth/presentions/pages/register_screen.dart';
+import 'package:flutter_application_2/features/update_profile.dart';
 import 'package:flutter_application_2/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -25,6 +28,7 @@ class AppRouter {
   static String home = '/home';
   static String login = '/login';
   static String register = '/register';
+  static String profile = '/profile';
 
   /// Main router configuration with authentication logic
   ///
@@ -40,12 +44,17 @@ class AppRouter {
     // Define all application routes
     routes: [
       // Protected home route with BlocProvider
+      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
       GoRoute(
-        path: home,
-        builder: (context, state) => BlocProvider.value(
-          value: sl<AuthCubit>(), // Inject AuthCubit from service locator
-          child: const HomeScreen(),
-        ),
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/profile/update',
+        builder: (context, state) {
+          final user = state.extra as UserEntity;
+          return UpdateProfile(currentUser: user);
+        },
       ),
 
       // Public authentication routes

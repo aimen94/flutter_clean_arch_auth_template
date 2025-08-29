@@ -120,6 +120,31 @@ class DioClient {
       rethrow;
     }
   }
+
+  Future<Response> put(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReciveProgress,
+  }) async {
+    try {
+      final Response response = await _dio.put(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReciveProgress,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 

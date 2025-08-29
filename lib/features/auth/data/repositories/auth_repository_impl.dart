@@ -6,6 +6,7 @@ import 'package:flutter_application_2/features/auth/data/datasources/auth_local_
 import 'package:flutter_application_2/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/login_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/register_request_model.dart';
+import 'package:flutter_application_2/features/auth/data/models/request/update_user_request_model.dart';
 import 'package:flutter_application_2/features/auth/domin/entity/user_entity.dart';
 import 'package:flutter_application_2/features/auth/domin/repository/auth_repository.dart';
 
@@ -199,6 +200,37 @@ class AuthRepositoryImpl implements AuthRepository {
       } on CacheException catch (e) {
         return Left(CashFailure(message: e.message));
       }
+    }
+  }
+
+  @override
+  Future<Either<Failures, UserEntity>> updateProfile({
+    String? firstName,
+    String? lastName,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final cashUser = await localDataSource.getCachedUser();
+        if (cashUser == null) {
+          return Left(CashFailure(message: "No  cached user find for update"));
+        }
+        final updateUserRequest = UpdateUserRequestModel(
+          firstName: firstName,
+          lastName: lastName,
+        );
+        final updauserModel = await remoteDataSource.updateProfile(
+          updateUserRequest: updateUserRequest,
+          userId: cashUser.id.toString(),
+        );
+        await localDataSource.cacheUser(updauserModel);
+        return Right(updauserModel);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } on CacheException catch (e) {
+        return Left(CashFailure(message: e.message));
+      }
+    } else {
+      return Left(NetworkFailure(message: "No internet connection"));
     }
   }
 }

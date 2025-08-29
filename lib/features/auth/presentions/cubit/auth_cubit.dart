@@ -1,3 +1,4 @@
+import 'package:flutter_application_2/features/auth/domin/usecase/UpdateUserUseCase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/User_profileUseCase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/login_usecase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/logout_usecase.dart';
@@ -33,6 +34,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   /// Use case for retrieving user profile information
   final GetUserProfileUseCase getUserProfileUseCase;
+  final Updateuserusecase updateuserusecase;
 
   /// Creates an AuthCubit with required use cases
   ///
@@ -45,6 +47,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.loginUsecase,
     required this.registerUsecase,
     required this.getUserProfileUseCase,
+    required this.updateuserusecase,
   }) : super(AuthInitial());
 
   /// Authenticates a user with username and password
@@ -124,9 +127,19 @@ class AuthCubit extends Cubit<AuthState> {
   ///
   /// The profile retrieval implements offline-first strategy,
   /// providing seamless user experience regardless of network connectivity.
-  Future<void> GetUserProfile() async {
+  Future<void> getUserProfile() async {
     emit(AuthLoading());
     final result = await getUserProfileUseCase.call();
+    result.fold(
+      (faliure) => emit(AuthErorr(errorMessage: faliure.message)),
+      (user) => emit(authSuccess(userEntity: user)),
+    );
+  }
+
+  Future<void> updateProfile(String firstName, String lastName) async {
+    emit(AuthLoading());
+    final parms = UpdateParams(firstName: firstName, lastName: lastName);
+    final result = await updateuserusecase.call(parms);
     result.fold(
       (faliure) => emit(AuthErorr(errorMessage: faliure.message)),
       (user) => emit(authSuccess(userEntity: user)),

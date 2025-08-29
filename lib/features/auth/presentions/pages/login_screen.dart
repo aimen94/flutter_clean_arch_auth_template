@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_state.dart';
-import 'package:flutter_application_2/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,11 +23,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      // Create AuthCubit instance using dependency injection
-      create: (_) => sl<AuthCubit>(),
-      child: const LoginView(),
-    );
+    return const LoginView();
   }
 }
 

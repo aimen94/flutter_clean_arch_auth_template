@@ -8,6 +8,7 @@ import 'package:flutter_application_2/features/auth/data/datasources/auth_local_
 import 'package:flutter_application_2/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:flutter_application_2/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:flutter_application_2/features/auth/domin/repository/auth_repository.dart';
+import 'package:flutter_application_2/features/auth/domin/usecase/UpdateUserUseCase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/User_profileUseCase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/login_usecase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/logout_usecase.dart';
@@ -119,6 +120,7 @@ Future<void> setupLocator() async {
   sl.registerLazySingleton(
     () => GetUserProfileUseCase(sl.get<AuthRepository>()),
   );
+  sl.registerLazySingleton(() => Updateuserusecase(sl.get<AuthRepository>()));
 
   // --- Presentation Layer ---
   // Cubit for state management in the UI layer
@@ -128,6 +130,7 @@ Future<void> setupLocator() async {
       logoutUsecase: sl.get<LogoutUsecase>(),
       registerUsecase: sl.get<RegisterUsecase>(),
       getUserProfileUseCase: sl.get<GetUserProfileUseCase>(),
+      updateuserusecase: sl.get<Updateuserusecase>(),
     ),
   );
 }

@@ -80,4 +80,8 @@ abstract class AuthRepository {
   /// - If offline: returns cached user data if available
   /// - Provides seamless user experience in both scenarios
   Future<Either<Failures, UserEntity>> getUserProfile();
+  Future<Either<Failures, UserEntity>> updateProfile({
+    String? firstName,
+    String? lastName,
+  });
 }

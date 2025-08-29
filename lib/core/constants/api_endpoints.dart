@@ -5,6 +5,7 @@ class ApiEndpoints {
   static const String register = "https://dummyjson.com/users/add";
   static const String getProfile = "https://dummyjson.com/auth/me";
   static const String refreshToken = "https://dummyjson.com/auth/refresh";
+  static const String updateProfile = "https://dummyjson.com/users/";
 }
 
 class AppStrings {

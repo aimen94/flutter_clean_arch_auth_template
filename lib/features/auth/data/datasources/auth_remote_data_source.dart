@@ -5,6 +5,7 @@ import 'package:flutter_application_2/core/network/dio_client.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/login_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/refresh_token_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/register_request_model.dart';
+import 'package:flutter_application_2/features/auth/data/models/request/update_user_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/response/login_response_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/user_model.dart';
 
@@ -19,34 +20,19 @@ import 'package:flutter_application_2/features/auth/data/models/user_model.dart'
 /// - User profile retrieval
 /// - Server communication using HTTP requests
 abstract class AuthRemoteDataSource {
-  /// Authenticates a user with username and password
-  ///
-  /// [loginRequest] - Login credentials (username, password)
-  /// Returns LoginResponseModel with user data and tokens
-  /// Throws ServerException on authentication failure
   Future<LoginResponseModel> login(LoginRequestModel loginRequest);
 
-  /// Registers a new user account
-  ///
-  /// [registerRequest] - User registration data
-  /// Returns UserModel for the newly created account
-  /// Throws ServerException on registration failure
   Future<UserModel> register(RegisterRequestModel registerRequest);
 
-  /// Retrieves the current user's profile information
-  ///
-  /// Returns UserModel with complete profile data
-  /// Throws ServerException on retrieval failure
   Future<UserModel> getProfile();
 
-  /// Refreshes the access token using a refresh token
-  ///
-  /// [refreshTokenRequest] - Refresh token for renewal
-  /// Returns LoginResponseModel with new tokens
-  /// Throws ServerException on refresh failure
   Future<LoginResponseModel> refreshToken(
     RefreshTokenRequestModel refreshTokenRequest,
   );
+  Future<UserModel> updateProfile({
+    required UpdateUserRequestModel updateUserRequest,
+    required String userId,
+  });
 }
 
 /// Implementation of AuthRemoteDataSource interface
@@ -211,6 +197,39 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(
         message: e.message ?? 'an erorr ouccred',
         statusCode: 500,
+      );
+    } catch (e) {
+      throw ServerException(
+        message: 'An unknown error occurred: $e',
+        statusCode: 500,
+      );
+    }
+  }
+
+  @override
+  Future<UserModel> updateProfile({
+    required UpdateUserRequestModel updateUserRequest,
+    required String userId,
+  }) async {
+    try {
+      final response = await _dioClient.put(
+        "${ApiEndpoints.updateProfile}$userId",
+        data: updateUserRequest.toJson(),
+      );
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(response.data);
+      } else {
+        throw ServerException(
+          message: response.data is Map
+              ? response.data['message']
+              : 'filed to get user data',
+          statusCode: response.statusCode,
+        );
+      }
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.message ?? 'An error occurred',
+        statusCode: e.response?.statusCode,
       );
     } catch (e) {
       throw ServerException(
