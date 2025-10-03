@@ -78,34 +78,34 @@ class UserEntity extends Equatable {
 ///
 /// Contains basic product information including vendor details,
 /// availability, pricing, and identification.
-class ProductEntity {
-  /// Unique identifier for the vendor selling the product
-  final int vendorId;
+// class ProductEntity {
+//   /// Unique identifier for the vendor selling the product
+//   final int vendorId;
 
-  /// Indicates whether the product is currently in stock
-  final bool inStock;
+//   /// Indicates whether the product is currently in stock
+//   final bool inStock;
 
-  /// Product price in USD as a string
-  final String priceUsd;
+//   /// Product price in USD as a string
+//   final String priceUsd;
 
-  /// Human-readable name of the product
-  final String productName;
+//   /// Human-readable name of the product
+//   final String productName;
 
-  /// Unique identifier for the product
-  final int productId;
+//   /// Unique identifier for the product
+//   final int productId;
 
-  /// Creates a ProductEntity with all required product information
-  ///
-  /// [vendorId] - ID of the vendor selling the product
-  /// [inStock] - Whether the product is currently available
-  /// [priceUsd] - Product price in US dollars
-  /// [productName] - Name/description of the product
-  /// [productId] - Unique identifier for the product
-  ProductEntity({
-    required this.vendorId,
-    required this.inStock,
-    required this.priceUsd,
-    required this.productName,
-    required this.productId,
-  });
-}
+//   /// Creates a ProductEntity with all required product information
+//   ///
+//   /// [vendorId] - ID of the vendor selling the product
+//   /// [inStock] - Whether the product is currently available
+//   /// [priceUsd] - Product price in US dollars
+//   /// [productName] - Name/description of the product
+//   /// [productId] - Unique identifier for the product
+//   ProductEntity({
+//     required this.vendorId,
+//     required this.inStock,
+//     required this.priceUsd,
+//     required this.productName,
+//     required this.productId,
+//   });
+// }

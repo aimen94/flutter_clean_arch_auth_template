@@ -14,6 +14,14 @@ import 'package:flutter_application_2/features/auth/domin/usecase/login_usecase.
 import 'package:flutter_application_2/features/auth/domin/usecase/logout_usecase.dart';
 import 'package:flutter_application_2/features/auth/domin/usecase/register_usecase.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
+import 'package:flutter_application_2/features/products/data/datasources/product_remote_data_source.dart';
+import 'package:flutter_application_2/features/products/data/repositories/product_repository_impl.dart';
+import 'package:flutter_application_2/features/products/domin/repository/product_repository.dart';
+import 'package:flutter_application_2/features/products/domin/usecase/get_all_categories_use_case.dart';
+import 'package:flutter_application_2/features/products/domin/usecase/get_product_by_id_use_case.dart';
+import 'package:flutter_application_2/features/products/domin/usecase/get_products_by_category_use_case.dart';
+import 'package:flutter_application_2/features/products/domin/usecase/get_products_use_case.dart';
+import 'package:flutter_application_2/features/products/domin/usecase/get_search_products_use_case.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -71,7 +79,9 @@ Future<void> setupLocator() async {
     () => NetworkInfoImpl(sl.get<InternetConnection>()),
   );
 
-  // =================== 3. Features - Authentication ===================
+  // ========================= 3. Features  ==============================
+  // =================== 3.1 Features - Authentication ===================
+
   // Register authentication-related services following Clean Architecture
 
   // --- Data Sources Layer ---
@@ -82,6 +92,7 @@ Future<void> setupLocator() async {
       sl.get<LocalStorage>(),
     ),
   );
+  ;
 
   // --- Core Network Services (after DataSources) ---
   // API interceptors for handling authentication headers and token refresh
@@ -101,6 +112,12 @@ Future<void> setupLocator() async {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(sl.get<DioClient>()),
   );
+  // =================== 3.2 Features - Authentication ===================
+
+  // products data sources are registered in product_service_locator.dart
+  sl.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSourceImpl(sl.get<DioClient>()),
+  );
 
   // --- Repository Layer ---
   // Repository implementation that coordinates between local and remote data sources
@@ -109,6 +126,13 @@ Future<void> setupLocator() async {
       remoteDataSource: sl.get<AuthRemoteDataSource>(),
       localDataSource: sl.get<AuthLocalDataSource>(),
       networkInfo: sl.get<NetworkInfo>(),
+    ),
+  );
+  //repository for products is registered in product_service_locator.dart
+  sl.registerLazySingleton<ProductRepository>(
+    () => ProductRepositoryImpl(
+      networkInfo: sl.get<NetworkInfo>(),
+      remoteDataSource: sl.get<ProductRemoteDataSource>(),
     ),
   );
 
@@ -122,6 +146,22 @@ Future<void> setupLocator() async {
   );
   sl.registerLazySingleton(() => Updateuserusecase(sl.get<AuthRepository>()));
 
+  // Use cases for products are registered in product_service_locator.dart
+  sl.registerLazySingleton(
+    () => GetProductsUseCase(sl.get<ProductRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetSearchProductsUseCase(sl.get<ProductRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetProductsByCategoryUseCase(sl.get<ProductRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetProductByIdUseCase(sl.get<ProductRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetAllCategoriesUseCase(sl.get<ProductRepository>()),
+  );
   // --- Presentation Layer ---
   // Cubit for state management in the UI layer
   sl.registerFactory(
