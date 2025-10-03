@@ -1,12 +1,15 @@
 import 'package:flutter/rendering.dart';
-import 'package:flutter_application_2/features/products/domin/entity/products.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_all_categories_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_product_by_id_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_products_by_category_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_products_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_search_products_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/entity/products.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_all_categories_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_product_by_id_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_products_by_category_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_products_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_search_products_use_case.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/products_list/products_list_state.dart';
 import 'package:flutter_application_2/features/products/presentions/cubit/products_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+const _productLimit = 20;
 
 class ProductsCubit extends Cubit<ProductsState> {
   final GetProductsUseCase getProductsUseCase;
@@ -98,9 +101,24 @@ class ProductsCubit extends Cubit<ProductsState> {
     );
   }
 
-  Future<void> featchInitialProudectsByCategory(String category) async {
-    emit(state.copyWith(status: ProductStatus.loading));
-    final result = await getProductsByCategoryUseCase.call(category);
+  Future<void> fetchInitialProductsByCategory(String category) async {
+    // عند بدء فلترة جديدة، امسح القائمة القديمة وأعد تعيين الصفحة
+    emit(
+      state.copyWith(
+        status: ProductStatus.loading,
+        products: [], // <-- امسح المنتجات القديمة
+        page: 0,
+        hasReachedMax: false,
+      ),
+    );
+
+    final params = ProductsByCategoryParams(
+      categoryName: category,
+      limit: _productLimit,
+      skip: 0,
+    );
+    final result = await getProductsByCategoryUseCase(params);
+
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -110,18 +128,30 @@ class ProductsCubit extends Cubit<ProductsState> {
       ),
       (products) => emit(
         state.copyWith(
+          // ✨ تصحيح: استخدام emit
           status: ProductStatus.success,
           products: products,
-          hasReachedMax: true,
-          page: state.page + 1,
+          page: 1, // ✨ تصحيح: إعادة التعيين إلى 1
+          hasReachedMax:
+              products.length < _productLimit, // ✨ تصحيح: حساب ديناميكي
         ),
       ),
     );
   }
 
   Future<void> fetchMoreProductsByCategory(String category) async {
+    if (state.hasReachedMax || state.status == ProductListStatus.loadingMore)
+      return;
+
     emit(state.copyWith(status: ProductStatus.loadingMore));
-    final result = await getProductsByCategoryUseCase.call(category);
+    final params = ProductsByCategoryParams(
+      categoryName: category,
+      limit: _productLimit,
+      skip: state.page * _productLimit,
+    );
+    //final result = await productsByCategoryUseCase.call(params);
+    final result = await getProductsByCategoryUseCase(params);
+
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -129,8 +159,8 @@ class ProductsCubit extends Cubit<ProductsState> {
           errorMessage: failure.message,
         ),
       ),
-      (NewProducts) {
-        if (NewProducts.isEmpty) {
+      (newProducts) {
+        if (newProducts.isEmpty) {
           emit(
             state.copyWith(hasReachedMax: true, status: ProductStatus.success),
           );
@@ -138,9 +168,9 @@ class ProductsCubit extends Cubit<ProductsState> {
           emit(
             state.copyWith(
               status: ProductStatus.success,
-              products: List.of(state.products)..addAll(NewProducts),
+              products: List.of(state.products)..addAll(newProducts),
               page: state.page + 1,
-              hasReachedMax: NewProducts.length < 20,
+              hasReachedMax: newProducts.length < _productLimit,
             ),
           );
         }

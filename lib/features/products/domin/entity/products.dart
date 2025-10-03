@@ -5,15 +5,20 @@ class ProductsEntity extends Equatable {
   final String title;
   final String description;
   final double price;
-  final thumbnail;
-  final List<ReviewsEntity> reviews;
-  ProductsEntity({
+  final String thumbnail;
+  final double rating;
+  final List<ReviewEntity> reviews;
+  final List<String> images;
+
+  const ProductsEntity({
     required this.id,
     required this.title,
     required this.description,
     required this.price,
     required this.thumbnail,
+    required this.rating,
     this.reviews = const [],
+    required this.images,
   });
 
   @override
@@ -24,20 +29,66 @@ class ProductsEntity extends Equatable {
     price,
     thumbnail,
     reviews,
+    rating,
+    images,
   ];
 }
 
-class ReviewsEntity extends Equatable {
-  final double rating;
+class ReviewEntity extends Equatable {
+  final int rating;
   final String comment;
+  final String reviewerName;
 
-  final String reviewName;
-  ReviewsEntity({
+  const ReviewEntity({
     required this.rating,
     required this.comment,
-    required this.reviewName,
+    required this.reviewerName,
   });
 
   @override
-  List<Object?> get props => [rating, comment, reviewName];
+  List<Object?> get props => [rating, comment, reviewerName];
 }
+
+// import 'package:equatable/equatable.dart';
+
+// class ProductsEntity extends Equatable {
+//   final int id;
+//   final String title;
+//   final String description;
+//   final double price;
+//   final thumbnail;
+//   final List<ReviewsEntity> reviews;
+//   ProductsEntity({
+//     required this.id,
+//     required this.title,
+//     required this.description,
+//     required this.price,
+//     required this.thumbnail,
+//     this.reviews = const [],
+//   });
+
+//   @override
+//   List<Object?> get props => [
+//     id,
+//     title,
+//     description,
+//     price,
+//     thumbnail,
+//     reviews,
+//   ];
+// }
+
+// class ReviewsEntity extends Equatable {
+//   final double rating;
+//   final String comment;
+
+//   final String reviewName;
+//   ReviewsEntity({
+//     required this.rating,
+//     required this.comment,
+//     required this.reviewName,
+//   });
+
+//   @override
+//   List<Object?> get props => [rating, comment, reviewName];
+// }

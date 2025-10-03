@@ -7,8 +7,8 @@ import 'package:flutter_application_2/features/auth/data/datasources/auth_remote
 import 'package:flutter_application_2/features/auth/data/models/request/login_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/register_request_model.dart';
 import 'package:flutter_application_2/features/auth/data/models/request/update_user_request_model.dart';
-import 'package:flutter_application_2/features/auth/domin/entity/user_entity.dart';
-import 'package:flutter_application_2/features/auth/domin/repository/auth_repository.dart';
+import 'package:flutter_application_2/features/auth/domain/entity/user_entity.dart';
+import 'package:flutter_application_2/features/auth/domain/repository/auth_repository.dart';
 
 /// Implementation of AuthRepository interface
 ///

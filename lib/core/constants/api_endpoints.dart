@@ -7,11 +7,12 @@ class ApiEndpoints {
   static const String refreshToken = "https://dummyjson.com/auth/refresh";
   static const String updateProfile = "https://dummyjson.com/users/";
   static const String products = "https://dummyjson.com/products";
-
   static const String categories = "https://dummyjson.com/products/categories";
+  static const String categoryProducts =
+      "https://dummyjson.com/products/category";
   static const String searchProducts = "https://dummyjson.com/products/search";
   static const String allCategories =
-      "https://dummyjson.com/products/categories";
+      'https://dummyjson.com/products/category-list';
   //static String searchProducts(String query) => "https://dummyjson.com/products?q=$query";
 }
 

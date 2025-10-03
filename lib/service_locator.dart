@@ -7,26 +7,33 @@ import 'package:flutter_application_2/core/storage/secure_storage_manager.dart';
 import 'package:flutter_application_2/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:flutter_application_2/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:flutter_application_2/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:flutter_application_2/features/auth/domin/repository/auth_repository.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/UpdateUserUseCase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/User_profileUseCase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/login_usecase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/logout_usecase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/register_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/repository/auth_repository.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/UpdateUserUseCase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/User_profileUseCase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/login_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/logout_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/register_usecase.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
 import 'package:flutter_application_2/features/products/data/datasources/product_remote_data_source.dart';
 import 'package:flutter_application_2/features/products/data/repositories/product_repository_impl.dart';
-import 'package:flutter_application_2/features/products/domin/repository/product_repository.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_all_categories_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_product_by_id_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_products_by_category_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_products_use_case.dart';
-import 'package:flutter_application_2/features/products/domin/usecase/get_search_products_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/repository/product_repository.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_all_categories_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_product_by_id_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_products_by_category_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_products_use_case.dart';
+import 'package:flutter_application_2/features/products/domain/usecase/get_search_products_use_case.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/categories/categories_cubit.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/featured_products/featured_products_cubit.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/products_cubit.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/products_list/products_list_cubit.dart';
+import 'package:flutter_application_2/features/products/presentions/cubit/searche/searche_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'features/products/presentions/cubit/product_detail/product_detail_cubit.dart';
 
 /// Global GetIt instance for dependency injection
 /// Provides centralized access to all registered services
@@ -171,6 +178,36 @@ Future<void> setupLocator() async {
       registerUsecase: sl.get<RegisterUsecase>(),
       getUserProfileUseCase: sl.get<GetUserProfileUseCase>(),
       updateuserusecase: sl.get<Updateuserusecase>(),
+    ),
+  );
+
+  // Cubit for products is registered in product_service_locator.dart
+  sl.registerFactory(
+    () => ProductsCubit(
+      getProductsUseCase: sl.get<GetProductsUseCase>(),
+      getAllCategoriesUseCase: sl.get<GetAllCategoriesUseCase>(),
+      getProductByIdUseCase: sl.get<GetProductByIdUseCase>(),
+      getSearchProductsUseCase: sl.get<GetSearchProductsUseCase>(),
+      getProductsByCategoryUseCase: sl.get<GetProductsByCategoryUseCase>(),
+    ),
+  );
+  sl.registerFactory(() => CategoriesCubit(sl.get<GetAllCategoriesUseCase>()));
+  sl.registerFactory(() => FeaturedProductsCubit(sl.get<GetProductsUseCase>()));
+  sl.registerFactory(
+    () => ProductsListCubit(
+      getProductsUseCase: sl.get<GetProductsUseCase>(),
+      productsByCategoryUseCase: sl.get<GetProductsByCategoryUseCase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => ProductDetailCubit(
+      getProductByIdUseCase: sl.get<GetProductByIdUseCase>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => SearchCubit(
+      getSearchProductsUseCase: sl.get<GetSearchProductsUseCase>(),
     ),
   );
 }

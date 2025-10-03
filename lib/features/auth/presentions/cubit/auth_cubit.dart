@@ -1,8 +1,8 @@
-import 'package:flutter_application_2/features/auth/domin/usecase/UpdateUserUseCase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/User_profileUseCase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/login_usecase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/logout_usecase.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/register_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/UpdateUserUseCase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/User_profileUseCase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/login_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/logout_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/register_usecase.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

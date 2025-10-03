@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/features/auth/domin/entity/user_entity.dart';
+import 'package:flutter_application_2/features/auth/domain/entity/user_entity.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class UpdateProfile extends StatefulWidget {
+class UpdateProfileScreen extends StatefulWidget {
   final UserEntity currentUser;
 
-  UpdateProfile({super.key, required this.currentUser});
+  const UpdateProfileScreen({super.key, required this.currentUser});
 
   @override
-  State<UpdateProfile> createState() => _UpdateProfileState();
+  State<UpdateProfileScreen> createState() => _UpdateProfileState();
 }
 
 @override
-class _UpdateProfileState extends State<UpdateProfile> {
+class _UpdateProfileState extends State<UpdateProfileScreen> {
   late final TextEditingController _firstNameController;
 
   late final TextEditingController _lastNameController;
@@ -58,14 +58,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.green, // تحسين
+                  backgroundColor: Colors.green,
                   content: Text(
-                    // ✨ تصحيح اسم المتغير
                     'Success! Profile for ${state.userEntity.username} updated.',
                   ),
                 ),
               );
-            // ✨ مهم: ارجع إلى الشاشة السابقة بعد النجاح
             context.pop();
           }
         },

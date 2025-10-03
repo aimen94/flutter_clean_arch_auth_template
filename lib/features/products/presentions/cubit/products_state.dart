@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_application_2/features/products/domin/entity/products.dart';
+import 'package:flutter_application_2/features/products/domain/entity/products.dart';
 
 enum ProductStatus { initial, loading, success, failure, loadingMore }
 

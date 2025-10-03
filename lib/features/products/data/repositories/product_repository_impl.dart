@@ -3,8 +3,8 @@ import 'package:flutter_application_2/core/errors/exceptions.dart';
 import 'package:flutter_application_2/core/errors/failures.dart';
 import 'package:flutter_application_2/core/network/network_info.dart';
 import 'package:flutter_application_2/features/products/data/datasources/product_remote_data_source.dart';
-import 'package:flutter_application_2/features/products/domin/entity/products.dart';
-import 'package:flutter_application_2/features/products/domin/repository/product_repository.dart';
+import 'package:flutter_application_2/features/products/domain/entity/products.dart';
+import 'package:flutter_application_2/features/products/domain/repository/product_repository.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   final NetworkInfo networkInfo;
@@ -39,24 +39,36 @@ class ProductRepositoryImpl implements ProductRepository {
     int limit = 20,
     int skip = 0,
   }) async {
-    return _hadelNetworkRequest(
-      () => remoteDataSource.getProducts(limit: limit, skip: skip),
-    );
+    return _hadelNetworkRequest<List<ProductsEntity>>(() async {
+      final models = await remoteDataSource.getProducts(
+        limit: limit,
+        skip: skip,
+      );
+      return models.cast<ProductsEntity>();
+    });
   }
 
   @override
   Future<Either<Failures, ProductsEntity>> getProductById(int id) {
-    // TODO: implement getProductById
-    throw UnimplementedError();
+    return _hadelNetworkRequest<ProductsEntity>(
+      () async => await remoteDataSource.getProductById(id),
+    );
   }
 
   @override
-  Future<Either<Failures, List<ProductsEntity>>> getProductsByCategory(
-    String categoryName,
-  ) async {
-    return _hadelNetworkRequest(
-      () => remoteDataSource.getProductsByCategory(categoryName),
-    );
+  Future<Either<Failures, List<ProductsEntity>>> getProductsByCategory({
+    required String categoryName,
+    required int limit,
+    required int skip,
+  }) async {
+    return _hadelNetworkRequest<List<ProductsEntity>>(() async {
+      final models = await remoteDataSource.getProductsByCategory(
+        categoryName: categoryName,
+        limit: 20,
+        skip: 0,
+      );
+      return models.cast<ProductsEntity>();
+    });
   }
 
   @override
@@ -65,12 +77,13 @@ class ProductRepositoryImpl implements ProductRepository {
     int limt = 20,
     int skip = 0,
   }) async {
-    return _hadelNetworkRequest(
-      () => remoteDataSource.searchProducts(
+    return _hadelNetworkRequest<List<ProductsEntity>>(() async {
+      final models = await remoteDataSource.searchProducts(
         query: query,
         limit: limt,
         skip: skip,
-      ),
-    );
+      );
+      return models.cast<ProductsEntity>();
+    });
   }
 }

@@ -7,11 +7,15 @@ import 'package:flutter_application_2/core/network/dio_client.dart';
 import 'package:flutter_application_2/features/products/data/models/products_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<List<ProductsModel>> getProducts({int limit = 20, int skip = 0});
-  Future<ProductsModel> getProductById(int id);
-  Future<List<ProductsModel>> getProductsByCategory(String categoryName);
+  Future<List<ProductModel>> getProducts({int limit = 20, int skip = 0});
+  Future<ProductModel> getProductById(int id);
+  Future<List<ProductModel>> getProductsByCategory({
+    required String categoryName,
+    required int limit,
+    required int skip,
+  });
   Future<List<String>> getAllCategories();
-  Future<List<ProductsModel>> searchProducts({
+  Future<List<ProductModel>> searchProducts({
     required String query,
     int limit = 20,
     int skip = 0,
@@ -75,18 +79,14 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductsModel>> getProducts({
-    int limit = 20,
-
-    int skip = 0,
-  }) async {
+  Future<List<ProductModel>> getProducts({int limit = 20, int skip = 0}) async {
     final queryParameters = {'limit': limit, 'skip': skip};
-    return _handleApiRequestForList<ProductsModel>(
+    return _handleApiRequestForList<ProductModel>(
       apiRequest: () => _dioClient.get(
         ApiEndpoints.products,
         queryParameters: queryParameters,
       ),
-      fromJson: (json) => ProductsModel.fromJson(json),
+      fromJson: (json) => ProductModel.fromJson(json),
       listKey: 'products',
     );
   }
@@ -114,36 +114,41 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   }
 
   @override
-  Future<List<ProductsModel>> getProductsByCategory(String categoryName) async {
+  Future<List<ProductModel>> getProductsByCategory({
+    required String categoryName,
+    required int limit,
+    required int skip,
+  }) async {
     return _handleApiRequestForList(
       apiRequest: () =>
-          _dioClient.get('${ApiEndpoints.categories}/$categoryName'),
-      fromJson: (json) => ProductsModel.fromJson(json),
-      listKey: 'category',
-    );
-  }
-
-  @override
-  Future<List<ProductsModel>> searchProducts({
-    required String query,
-    int limit = 20,
-    int skip = 0,
-  }) async {
-    return _handleApiRequestForList<ProductsModel>(
-      apiRequest: () => _dioClient.get(
-        ApiEndpoints.searchProducts,
-        queryParameters: {'q': query, 'limit': limit, 'skip': skip},
-      ),
-      fromJson: (json) => ProductsModel.fromJson(json),
+          _dioClient.get('${ApiEndpoints.categoryProducts}/$categoryName'),
+      fromJson: (json) => ProductModel.fromJson(json),
+      //listKey: 'category',
       listKey: 'products',
     );
   }
 
   @override
-  Future<ProductsModel> getProductById(int id) async {
+  Future<List<ProductModel>> searchProducts({
+    required String query,
+    int limit = 20,
+    int skip = 0,
+  }) async {
+    return _handleApiRequestForList<ProductModel>(
+      apiRequest: () => _dioClient.get(
+        ApiEndpoints.searchProducts,
+        queryParameters: {'q': query, 'limit': limit, 'skip': skip},
+      ),
+      fromJson: (json) => ProductModel.fromJson(json),
+      listKey: 'products',
+    );
+  }
+
+  @override
+  Future<ProductModel> getProductById(int id) async {
     return _handleApiRequestForObject(
-      apiRequest: () => _dioClient.get('${ApiEndpoints.categories}/$id'),
-      fromJson: (json) => ProductsModel.fromJson(json),
+      apiRequest: () => _dioClient.get('${ApiEndpoints.products}/$id'),
+      fromJson: (json) => ProductModel.fromJson(json),
     );
   }
 }

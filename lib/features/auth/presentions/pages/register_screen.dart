@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/features/auth/domin/usecase/register_usecase.dart';
+import 'package:flutter_application_2/features/auth/domain/usecase/register_usecase.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_cubit.dart';
 import 'package:flutter_application_2/features/auth/presentions/cubit/auth_state.dart';
 import 'package:flutter_application_2/service_locator.dart';

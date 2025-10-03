@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_application_2/features/auth/domin/entity/user_entity.dart';
+import 'package:flutter_application_2/features/auth/domain/entity/user_entity.dart';
 
 /// Base class for all authentication states
 ///
